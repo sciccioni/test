@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive Intelligence Report — TellMyTale.com</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --surface-2: #F3F1EC;
+    --border: #E4E1D8;
+    --border-dark: #C9C6BC;
+    --text-primary: #1A1917;
+    --text-secondary: #5E5C58;
+    --text-muted: #9B9890;
+    --accent: #C94A2C;
+    --accent-light: #FAF0EC;
+    --accent-mid: #E8A08A;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --ink: #2C2B28;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* LAYOUT */
+  .wrapper { max-width: 960px; margin: 0 auto; padding: 0 32px 80px; }
+
+  /* HEADER */
+  .report-header {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .header-meta span { color: var(--accent); }
+  .header-meta .sep { color: var(--border-dark); }
+  .report-header h1 {
+    font-family: var(--font-display);
+    font-size: 52px; line-height: 1.1;
+    color: var(--ink); margin-bottom: 16px;
+  }
+  .report-header h1 em { color: var(--accent); font-style: italic; }
+  .report-subtitle {
+    font-size: 17px; color: var(--text-secondary); max-width: 560px; line-height: 1.5;
+  }
+  .header-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  .badge {
+    font-size: 12px; font-weight: 500; padding: 5px 12px;
+    border-radius: 20px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-secondary);
+  }
+  .badge.danger { background: #FEF2F2; border-color: #F09595; color: #A32D2D; }
+  .badge.warn { background: var(--amber-light); border-color: #EF9F27; color: var(--amber); }
+  .badge.ok { background: var(--teal-light); border-color: #5DCAA5; color: var(--teal); }
+
+  /* SECTION */
+  .section { margin-bottom: 56px; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section h2 {
+    font-family: var(--font-display);
+    font-size: 30px; color: var(--ink); margin-bottom: 20px;
+  }
+
+  /* EXEC SUMMARY */
+  .exec-box {
+    background: var(--ink); color: #F5F3EE;
+    border-radius: 16px; padding: 36px 40px;
+    margin-bottom: 32px;
+  }
+  .exec-box p { font-size: 16px; line-height: 1.7; color: #D4D1C8; margin-bottom: 14px; }
+  .exec-box p:last-child { margin-bottom: 0; }
+  .exec-box strong { color: #FAF9F6; font-weight: 500; }
+  .rec-list { margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 20px; }
+  .rec-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 12px; font-size: 15px; color: #D4D1C8; line-height: 1.5;
+  }
+  .rec-num {
+    min-width: 26px; height: 26px; background: var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: white; margin-top: 1px;
+  }
+
+  /* STAT GRID */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 20px 16px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 300; color: var(--ink); line-height: 1; }
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.teal { color: var(--teal); }
+  .stat-note { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* COMPETITOR TABLE */
+  .comp-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  .comp-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .comp-table thead {
+    background: var(--surface-2);
+  }
+  .comp-table th {
+    padding: 12px 16px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted); border-bottom: 1px solid var(--border);
+  }
+  .comp-table td {
+    padding: 13px 16px; border-bottom: 1px solid var(--border);
+    vertical-align: middle; color: var(--text-primary);
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr.highlight { background: var(--accent-light); }
+  .comp-table tr.highlight td:first-child { font-weight: 500; }
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .pill.leader { background: var(--teal-light); color: var(--teal); }
+  .pill.challenger { background: var(--blue-light); color: var(--blue); }
+  .pill.niche { background: var(--amber-light); color: var(--amber); }
+  .pill.emerging { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-mid); }
+  .pill.legacy { background: var(--surface-2); color: var(--text-secondary); }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* CARDS */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
+  }
+  .card ul { list-style: none; }
+  .card ul li {
+    font-size: 14px; color: var(--text-secondary);
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-start; line-height: 1.4;
+  }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+
+  /* SWOT */
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 24px; }
+  @media (max-width: 640px) { .swot-grid { grid-template-columns: 1fr; } }
+  .swot-q {
+    padding: 24px; background: var(--surface);
+  }
+  .swot-q:nth-child(1) { background: #EAF3DE; }
+  .swot-q:nth-child(2) { background: #FEF2F2; }
+  .swot-q:nth-child(3) { background: #E6F1FB; }
+  .swot-q:nth-child(4) { background: #FCEBEB; }
+  .swot-q h3 { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .swot-q:nth-child(1) h3 { color: #3B6D11; }
+  .swot-q:nth-child(2) h3 { color: #A32D2D; }
+  .swot-q:nth-child(3) h3 { color: var(--blue); }
+  .swot-q:nth-child(4) h3 { color: #A32D2D; }
+  .swot-q ul { list-style: none; }
+  .swot-q ul li { font-size: 13px; line-height: 1.5; padding: 3px 0; color: var(--ink); padding-left: 14px; position: relative; }
+  .swot-q ul li::before { content: '·'; position: absolute; left: 2px; font-size: 18px; line-height: 1; top: 2px; }
+
+  /* TACTICS */
+  .tactic {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px 24px; margin-bottom: 12px;
+    display: grid; grid-template-columns: 40px 1fr auto; gap: 16px; align-items: start;
+  }
+  .tactic-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--ink); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 300; flex-shrink: 0;
+    font-family: var(--font-display);
+  }
+  .tactic-body h3 { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .tactic-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .tactic-from { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase; }
+  .tactic-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
+  .effort-badge {
+    font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+  }
+  .effort-low { background: var(--teal-light); color: var(--teal); }
+  .effort-med { background: var(--amber-light); color: var(--amber); }
+  .impact-badge {
+    font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+    background: var(--ink); color: white;
+  }
+
+  /* POSITIONING MAP */
+  .pos-map {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; position: relative; margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .pos-map svg { width: 100%; display: block; }
+
+  /* PROSSIMI PASSI */
+  .steps-list { list-style: none; }
+  .step-item {
+    display: flex; gap: 16px;
+    padding: 18px 0; border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 36px; width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; color: white; flex-shrink: 0; margin-top: 2px;
+  }
+  .step-item.urgente .step-num { background: var(--accent); }
+  .step-item.alta .step-num { background: var(--amber); }
+  .step-item.media .step-num { background: var(--blue); }
+  .step-item.lungo .step-num { background: var(--text-muted); }
+  .step-priority {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 3px;
+    display: inline-block; margin-bottom: 4px;
+  }
+  .step-item.urgente .step-priority { background: var(--accent-light); color: var(--accent); }
+  .step-item.alta .step-priority { background: var(--amber-light); color: var(--amber); }
+  .step-item.media .step-priority { background: var(--blue-light); color: var(--blue); }
+  .step-item.lungo .step-priority { background: var(--surface-2); color: var(--text-muted); }
+  .step-text { font-size: 14.5px; color: var(--text-primary); line-height: 1.5; }
+
+  /* FOOTER */
+  .report-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 24px; margin-top: 0;
+    font-size: 12px; color: var(--text-muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="report-header">
+    <div class="header-meta">
+      <span>Competitive Intelligence</span>
+      <span class="sep">·</span>
+      28 Aprile 2026
+      <span class="sep">·</span>
+      6 competitor diretti · 4 indiretti
+    </div>
+    <h1>Tell<em>My</em>Tale<br>Report Competitivo</h1>
+    <p class="report-subtitle">Brand emergente nel mercato dei libri personalizzati per bambini con illustrazioni AI. Posizione attuale: <strong>Debole</strong> — crescita rapida ma alta esposizione al paid.</p>
+    <div class="header-badges">
+      <span class="badge warn">~168K visite/mese</span>
+      <span class="badge danger">92% dipendente USA</span>
+      <span class="badge danger">Organico ~15%</span>
+      <span class="badge ok">+20% MoM</span>
+      <span class="badge ok">5 lingue</span>
+      <span class="badge">Lanciato nov. 2024</span>
+    </div>
+  </header>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <section class="section">
+    <div class="section-label">Executive Summary</div>
+    <div class="exec-box">
+      <p>TellMyTale.com ha raggiunto <strong>~168K visite mensili in soli 5 mesi</strong> — un risultato notevole — ma opera in un mercato dove <strong>Wonderbly</strong> (1M visite/mese, acquisito da Penguin Random House) e <strong>Wondeme</strong> (500K+ libri creati) dominano con brand affermati.</p>
+      <p>Il differenziatore principale è la <strong>trasformazione AI della foto del bambino</strong> in illustrazioni personalizzate, con 25+ titoli tematici a partire da $39.99. Il traffico è però quasi esclusivamente USA (92%) e fortemente dipendente da paid social — segnale che le vendite si reggono sull'advertising, non sulla brand awareness.</p>
+      <div class="rec-list">
+        <div class="rec-item"><span class="rec-num">1</span><span>Costruire presenza organica/SEO (ora quasi zero) per ridurre dipendenza da paid</span></div>
+        <div class="rec-item"><span class="rec-num">2</span><span>Differenziarsi sul mercato europeo/italiano dove i player US sono meno presenti</span></div>
+        <div class="rec-item"><span class="rec-num">3</span><span>Sviluppare social proof esterna (Trustpilot) per aumentare conversioni e credibilità</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MERCATO -->
+  <section class="section">
+    <div class="section-label">Il Mercato</div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Mercato 2025</div>
+        <div class="stat-value">$569M</div>
+        <div class="stat-note">libri personalizzati</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Atteso 2031</div>
+        <div class="stat-value teal">$1,05B</div>
+        <div class="stat-note">CAGR 9.2%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Segmento hot</div>
+        <div class="stat-value accent" style="font-size:18px; margin-top:4px;">AI Photo-based</div>
+        <div class="stat-note">crescita più rapida</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Audience principale</div>
+        <div class="stat-value" style="font-size:18px; margin-top:4px;">Madri 25-34</div>
+        <div class="stat-note">fascia regalo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANORAMICA COMPETITOR -->
+  <section class="section">
+    <div class="section-label">Panoramica Competitor</div>
+    <h2>Diretti</h2>
+    <div class="comp-table-wrap" style="margin-bottom:32px;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Visite/mese</th>
+            <th>Prezzo base</th>
+            <th>Differenziatore</th>
+            <th>Posizione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wonderbly</strong></td>
+            <td>~1.000.000</td>
+            <td>$20–40</td>
+            <td>Brand storico (2013), 11M+ libri, Penguin Random House</td>
+            <td><span class="pill leader">Leader</span></td>
+          </tr>
+          <tr>
+            <td><strong>Wondeme</strong></td>
+            <td>N/D</td>
+            <td>$34.99</td>
+            <td>AI watercolor da foto, 500K+ libri, 4.9/5</td>
+            <td><span class="pill challenger">Challenger AI</span></td>
+          </tr>
+          <tr>
+            <td><strong>Hooray Heroes</strong></td>
+            <td>~86.700</td>
+            <td>$20–30</td>
+            <td>Stile comic-book, multi-personaggio (famiglia)</td>
+            <td><span class="pill niche">Niche</span></td>
+          </tr>
+          <tr>
+            <td><strong>Magic Story</strong></td>
+            <td>~85.100</td>
+            <td>$19.99–24.99</td>
+            <td>Pixar-quality AI, 75K+ famiglie, 4.9/5</td>
+            <td><span class="pill challenger">AI Premium</span></td>
+          </tr>
+          <tr>
+            <td><strong>I See Me!</strong></td>
+            <td>N/D</td>
+            <td>$16–26</td>
+            <td>Pioneer 20+ anni, forte su neonati</td>
+            <td><span class="pill legacy">Legacy</span></td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>TellMyTale ★</strong></td>
+            <td>~167.600</td>
+            <td>$39.99</td>
+            <td>AI photo-to-illustration, 25+ titoli, multi-lingua</td>
+            <td><span class="pill emerging">Emergente</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Indiretti</h2>
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr><th>Brand</th><th>Approccio</th><th>Prezzo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Lullaby.ink</strong></td><td>AI digitale, 7 stili, fino a 4 personaggi</td><td>Da $5</td></tr>
+          <tr><td><strong>Childbook.ai</strong></td><td>Template AI digitale, budget</td><td>Da $2.50</td></tr>
+          <tr><td><strong>Librio</strong></td><td>Eco-sostenibile, carta riciclata</td><td>$25–32</td></tr>
+          <tr><td><strong>Put Me in the Story</strong></td><td>Personaggi con licenza Disney/Marvel</td><td>$25–40</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PROFILO TELLMYTALE -->
+  <section class="section">
+    <div class="section-label">Profilo TellMyTale</div>
+    <div class="stat-grid" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-label">Visite mensili</div>
+        <div class="stat-value">167.600</div>
+        <div class="stat-note">+20% vs mese prec.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue stimata/mese</div>
+        <div class="stat-value teal">$36K–74K</div>
+        <div class="stat-note">Conv. rate 1.5–2.5%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Bounce rate</div>
+        <div class="stat-value accent">67.77%</div>
+        <div class="stat-note">da ottimizzare</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Traffico USA</div>
+        <div class="stat-value accent">92.2%</div>
+        <div class="stat-note">alta concentrazione</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Prodotto & USP</div>
+        <ul>
+          <li>25+ libri tematici (dinosauri, principesse, supereroi…)</li>
+          <li>AI trasforma la foto in illustrazioni personalizzate</li>
+          <li>Prezzo $39.99 (da $59.99 — sconto 33% permanente)</li>
+          <li>5 lingue: EN, IT, FR, ES, DE</li>
+          <li>"Preview prima della stampa" + revisioni illimitate 24h</li>
+          <li>Foto eliminata dopo la stampa (privacy USP)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Canali di traffico</div>
+        <ul>
+          <li>Direct: 28.42% — buon brand recall</li>
+          <li>Organic Search: ~15% — troppo basso ⚠</li>
+          <li>Paid Social: principale driver (Meta Ads)</li>
+          <li>Display advertising attivo</li>
+          <li>Audience femminile: 73.75%</li>
+          <li>Piattaforma: Shopify + Parcelpanel</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="background: #FEF9EC; border-color: #EF9F27;">
+      <div class="card-title" style="color: var(--amber);">Stima ARR 2026</div>
+      <p style="font-size:15px; color: var(--ink); line-height:1.6;">Con una traiettoria di <strong>+20% mese su mese</strong> e un AOV stimato tra $45–$55, TellMyTale potrebbe superare <strong>$1M ARR entro fine 2026</strong> — a condizione che mantenga il ritmo e riduca il costo di acquisizione con canali organici.</p>
+    </div>
+  </section>
+
+  <!-- MAPPA DI POSIZIONAMENTO -->
+  <section class="section">
+    <div class="section-label">Mappa di posizionamento</div>
+    <div class="pos-map">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mappa di posizionamento: TellMyTale occupa il quadrante Premium + Foto-Based AI">
+        <!-- Grid lines -->
+        <line x1="350" y1="30" x2="350" y2="350" stroke="#E4E1D8" stroke-width="1"/>
+        <line x1="80" y1="190" x2="620" y2="190" stroke="#E4E1D8" stroke-width="1"/>
+
+        <!-- Axis labels -->
+        <text x="350" y="22" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#9B9890" letter-spacing="1">PREMIUM ($40+)</text>
+        <text x="350" y="370" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#9B9890" letter-spacing="1">BUDGET ($15-25)</text>
+        <text x="76" y="194" text-anchor="end" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#9B9890">SOLO NOME</text>
+        <text x="624" y="194" text-anchor="start" font-family="DM Sans, sans-serif" font-size="11" font-weight="600" fill="#9B9890">FOTO AI</text>
+
+        <!-- TellMyTale (highlighted) -->
+        <circle cx="470" cy="100" r="36" fill="#FAF0EC" stroke="#C94A2C" stroke-width="2"/>
+        <text x="470" y="97" text-anchor="middle" font-family="DM Serif Display, serif" font-size="13" fill="#C94A2C">TellMyTale</text>
+        <text x="470" y="112" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#C94A2C">$39.99 ★</text>
+
+        <!-- Wondeme -->
+        <circle cx="440" cy="130" r="28" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text x="440" y="127" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" font-weight="500" fill="#185FA5">Wondeme</text>
+        <text x="440" y="141" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#185FA5">$49.99</text>
+
+        <!-- Wonderbly -->
+        <circle cx="210" cy="240" r="44" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text x="210" y="237" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="13" font-weight="500" fill="#0F6E56">Wonderbly</text>
+        <text x="210" y="253" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#0F6E56">$20-40 · 1M/mo</text>
+
+        <!-- Magic Story -->
+        <circle cx="460" cy="270" r="24" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.5"/>
+        <text x="460" y="267" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" font-weight="500" fill="#BA7517">Magic Story</text>
+        <text x="460" y="280" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#BA7517">$19-24</text>
+
+        <!-- Hooray Heroes -->
+        <circle cx="490" cy="290" r="22" fill="#F3F1EC" stroke="#5E5C58" stroke-width="1.5"/>
+        <text x="490" y="287" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" fill="#5E5C58">H. Heroes</text>
+        <text x="490" y="300" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#5E5C58">$20-30</text>
+
+        <!-- I See Me -->
+        <circle cx="180" cy="290" r="20" fill="#F3F1EC" stroke="#9B9890" stroke-width="1"/>
+        <text x="180" y="287" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#9B9890">I See Me!</text>
+        <text x="180" y="300" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#9B9890">$16-26</text>
+      </svg>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted);">TellMyTale occupa lo spazio Photo-Based + Premium. <strong style="color:var(--ink)">Wondeme</strong> è il competitor più diretto e minaccioso in quella quadrant.</p>
+  </section>
+
+  <!-- SWOT -->
+  <section class="section">
+    <div class="section-label">Analisi SWOT</div>
+    <div class="swot-grid">
+      <div class="swot-q">
+        <h3>Punti di forza</h3>
+        <ul>
+          <li>Crescita rapida +20% MoM</li>
+          <li>Multi-lingua (5 lingue) → potenziale EU</li>
+          <li>AI photo-based competitiva</li>
+          <li>25+ titoli già disponibili</li>
+          <li>"Preview + revisioni illimitate" rassicuranti</li>
+        </ul>
+      </div>
+      <div class="swot-q">
+        <h3>Punti di debolezza</h3>
+        <ul>
+          <li>Brand &lt;6 mesi, zero storia</li>
+          <li>Organico quasi nullo → dipendenza totale da paid</li>
+          <li>No Trustpilot/Google → bassa credibilità esterna</li>
+          <li>Bounce rate 67.77% → UX da migliorare</li>
+          <li>Concentrazione USA 92%</li>
+          <li>Prezzo alto senza brand premium percepito</li>
+        </ul>
+      </div>
+      <div class="swot-q">
+        <h3>Opportunità</h3>
+        <ul>
+          <li>Mercato in crescita CAGR 9.2%</li>
+          <li>Hooray Heroes in calo (–5%)</li>
+          <li>Mercati EU sottoserviti (IT, ES, DE)</li>
+          <li>Stagionalità gifting (Natale, Compleanno)</li>
+          <li>SEO organico ora = vantaggio composto</li>
+          <li>Trustpilot → conversione immediata</li>
+        </ul>
+      </div>
+      <div class="swot-q">
+        <h3>Minacce</h3>
+        <ul>
+          <li>Wonderbly (Penguin) con risorse corporate</li>
+          <li>Wondeme consolida AI con 500K+ libri</li>
+          <li>Magic Story: prezzo basso, qualità comparabile</li>
+          <li>Aumento CPM Meta Ads colpisce subito</li>
+          <li>Nuovi player AI abbassano prezzo percepito</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAP SEO -->
+  <section class="section">
+    <div class="section-label">Gap SEO & Contenuto</div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Situazione attuale</div>
+        <ul>
+          <li>Solo keyword branded ("tellmytale books")</li>
+          <li>Nessuna keyword di categoria</li>
+          <li>Blog assente o minimo</li>
+          <li>Backlinks insufficienti (&lt;6 mesi)</li>
+          <li>~15% traffico organico — critico</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Da fare subito</div>
+        <ul>
+          <li>Blog: "migliori libri personalizzati per bambini"</li>
+          <li>Pagine /vs/wonderbly, /vs/wondeme</li>
+          <li>SEO su "personalized books for kids" + varianti IT/ES</li>
+          <li>Video testimonials YouTube/TikTok</li>
+          <li>Profilo Trustpilot + Google Reviews</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TATTICHE STEAL-WORTHY -->
+  <section class="section">
+    <div class="section-label">Tattiche "Steal-Worthy" dai Competitor</div>
+
+    <div class="tactic">
+      <div class="tactic-num">1</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Wondeme</div>
+        <h3>Garanzia 30 giorni visibile</h3>
+        <p>Riduce l'ansia da acquisto su un prodotto "non toccabile prima". Banner prominente su homepage e pagina prodotto.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-low">Sforzo: Basso</span>
+        <span class="impact-badge">Impatto: Alto</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">2</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Hooray Heroes</div>
+        <h3>SEO organico su keyword gifting</h3>
+        <p>49% del loro traffico è organico = CPA quasi zero. Blog con articoli "best personalized books for [occasion]".</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-med">Sforzo: Medio</span>
+        <span class="impact-badge">Impatto: Alto LP</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">3</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Wondeme</div>
+        <h3>"500.000 libri creati" come social proof dinamica</h3>
+        <p>Un numero grande crea fiducia istantanea. Contatore live in homepage con ordini reali.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-low">Sforzo: Basso</span>
+        <span class="impact-badge">Impatto: Medio-Alto</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">4</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Magic Story</div>
+        <h3>Video unboxing UGC su TikTok/Instagram</h3>
+        <p>La "reazione del bambino" è contenuto virale naturale. UGC campaign: chiedi ai clienti di postare e taggare.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-low">Sforzo: Basso</span>
+        <span class="impact-badge">Impatto: Alto ★</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">5</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Wonderbly</div>
+        <h3>Pagine /vs/competitor per SEO high-intent</h3>
+        <p>Chi cerca "wonderbly alternative" è pronto ad acquistare. Crea /vs/wonderbly, /vs/wondeme con confronto onesto.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-med">Sforzo: Medio</span>
+        <span class="impact-badge">Impatto: Alto</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">6</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da Wondeme</div>
+        <h3>eBook digitale come entry point</h3>
+        <p>Abbassa la barriera d'acquisto a $14.99–19.99, poi upsell al fisico. Riduce il CPA acquisendo nuovi clienti.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-med">Sforzo: Medio</span>
+        <span class="impact-badge">Impatto: Medio</span>
+      </div>
+    </div>
+
+    <div class="tactic">
+      <div class="tactic-num">7</div>
+      <div class="tactic-body">
+        <div class="tactic-from">da tutti</div>
+        <h3>Presenza su Trustpilot</h3>
+        <p>Social proof esterna converte molto meglio di quella interna. Email automatica post-consegna con link Trustpilot.</p>
+      </div>
+      <div class="tactic-tags">
+        <span class="effort-badge effort-low">Sforzo: Basso</span>
+        <span class="impact-badge">Impatto: Alto ★</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRATEGIA DIFFERENZIAZIONE -->
+  <section class="section">
+    <div class="section-label">Angoli di Differenziazione</div>
+    <div class="two-col">
+      <div class="card" style="border-left: 3px solid var(--accent);">
+        <div class="card-title">Angolo 1 — La vera somiglianza</div>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:10px;">"Not just their name. Their face, in every page." Contro Wonderbly (solo nome) TellMyTale vince chiaramente sull'AI photo-realism.</p>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--teal);">
+        <div class="card-title">Angolo 2 — Europa multilingua</div>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:10px;">Già 5 lingue → vantaggio strutturale. Wondeme e Magic Story quasi esclusivamente anglofoni. Opportunità: dominare "libri personalizzati bambini" in IT, ES, DE, FR.</p>
+      </div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--amber);">
+      <div class="card-title">Angolo 3 — Gifting emotion ("Guaranteed reaction")</div>
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">La "reazione del bambino" è il vero prodotto — non il libro. Marketing basato su video UGC di reazioni. Contre-positioning rispetto ai prodotti commodity: vendi emozione, non carta stampata.</p>
+    </div>
+  </section>
+
+  <!-- FONTI -->
+  <section class="section">
+    <div class="section-label">Fonti</div>
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr><th>Fonte</th><th>Dati estratti</th><th>Riferimento</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SimilarWeb</strong></td>
+            <td>Traffico mensile, canali, dati demografici, bounce rate, durata sessione (marzo 2026)</td>
+            <td style="font-size:12px;color:var(--text-muted);">similarweb.com</td>
+          </tr>
+          <tr>
+            <td><strong>TellMyTale.com</strong></td>
+            <td>Prezzi, catalogo prodotti, USP, tecnologia, lingue, condizioni di servizio</td>
+            <td style="font-size:12px;color:var(--text-muted);">tellmytale.com</td>
+          </tr>
+          <tr>
+            <td><strong>Wonderbly</strong></td>
+            <td>Prezzi, gamma prodotti, presenza geografica, comunicazione brand, acquisizione Penguin RH</td>
+            <td style="font-size:12px;color:var(--text-muted);">wonderbly.com</td>
+          </tr>
+          <tr>
+            <td><strong>Wondeme</strong></td>
+            <td>Prezzi, recensioni (4.9/5, 2.500+), volumi dichiarati (500K+ libri), garanzie</td>
+            <td style="font-size:12px;color:var(--text-muted);">wondeme.com</td>
+          </tr>
+          <tr>
+            <td><strong>Magic Story</strong></td>
+            <td>Prezzi, qualità illustrazioni AI, social proof (75K+ famiglie, 4.9/5 da 3.000+)</td>
+            <td style="font-size:12px;color:var(--text-muted);">magicstory.com</td>
+          </tr>
+          <tr>
+            <td><strong>Hooray Heroes</strong></td>
+            <td>Prezzi, personalizzazione multi-personaggio, split traffico organico/paid</td>
+            <td style="font-size:12px;color:var(--text-muted);">hoorayheroes.com</td>
+          </tr>
+          <tr>
+            <td><strong>Trustpilot</strong></td>
+            <td>Verifica presenza/assenza profili e recensioni dei competitor</td>
+            <td style="font-size:12px;color:var(--text-muted);">trustpilot.com</td>
+          </tr>
+          <tr>
+            <td><strong>Report di settore</strong></td>
+            <td>Dimensione mercato ($569M 2025 → $1,05B 2031, CAGR 9.2%), trend AI personalized books</td>
+            <td style="font-size:12px;color:var(--text-muted);">Ricerca pubblica di mercato</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="report-footer">
+    <span>Report generato il 28 Aprile 2026</span>
+    <span>Solo uso interno — analisi competitiva</span>
+  </footer>
+
+</div>
+</body>
+</html>
